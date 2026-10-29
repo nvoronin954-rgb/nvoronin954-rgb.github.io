@@ -1,12 +1,43 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заголовок страницы</title>
-</head>
-<body>
-    <h1>Привет, мир!!!!!1 Это самый лучший сайт ever!!!!!!!!!!!!!!!</h1>
-    <p>Это ваша первая веб-страница.</p>
-</body>
-</html>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
+  
+  // 1. Импортируйте службы аутентификации
+  import { getAuth, signInWithPopup, GithubAuthProvider } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBiZlF-n_G5xY8W5oEXPJBgjyUh5y1JVDg",
+    authDomain: "project-nice-f3987.firebaseapp.com",
+    projectId: "project-nice-f3987",
+    storageBucket: "project-nice-f3987.firebasestorage.app",
+    messagingSenderId: "979429697059",
+    appId: "1:979429697059:web:8422ddbfb29a98dfb13396",
+    measurementId: "G-6CDZTM6T9V"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
+  // 2. Инициализируйте Auth и создайте провайдер GitHub
+  const auth = getAuth(app);
+  const provider = new GithubAuthProvider();
+
+  // 3. Создайте функцию для вызова при клике на вашу кнопку "Войти через GitHub"
+  window.loginWithGithub = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // Успешный вход. Токен доступа можно использовать для запросов к GitHub API.
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+        console.log("Пользователь успешно вошел:", user);
+      })
+      .catch((error) => {
+        console.error("Ошибка авторизации:", error.message);
+      });
+  };
+</script>
+
+<!-- Пример кнопки в HTML -->
+<button onclick="loginWithGithub()">Войти через GitHub</button>
+
